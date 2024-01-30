@@ -18,7 +18,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.bashkiriaguide.BashkiriaGuide",
       "config": {
-        "googleMapsApiKey": "AIzaSyC1m-T8O6wNZbQ_FZyQb4FEmfVChS6AZi0"
+        "googleMapsApiKey": ""
       }
     },
     "android": {
@@ -30,7 +30,7 @@
       "versionCode": 2,
       "config": {
         "googleMaps": {
-          "apiKey": "<AIzaSyDcMRvrP32OA54PEWqQ1x5M4bYeRVxySBU>"
+          "apiKey": "<>"
         }
       }
     },
