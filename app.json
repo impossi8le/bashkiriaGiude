@@ -2,7 +2,7 @@
   "expo": {
     "name": "Путеводитель по Башкирии",
     "slug": "bashkiriaguide",
-    "version": "3.0.1",
+    "version": "3.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.bashkiriaguide.BashkiriaGuide",
       "config": {
-        "googleMapsApiKey": ""
+        "googleMapsApiKey": "AIzaSyC1m-T8O6wNZbQ_FZyQb4FEmfVChS6AZi0"
       }
     },
     "android": {
@@ -27,10 +27,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.bashkiriaguide.BashkiriaGuide",
-      "versionCode": 2,
+      "versionCode": 5,
       "config": {
         "googleMaps": {
-          "apiKey": "<>"
+          "apiKey": "AIzaSyDcMRvrP32OA54PEWqQ1x5M4bYeRVxySBU"
         }
       }
     },

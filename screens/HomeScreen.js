@@ -26,10 +26,9 @@ const HomeScreen = () => {
   // Header show
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => null,
-      headerShown: true,
+      headerShown: !state.isLoading, // Отображать Header только после загрузки данных
     });
-  }, [navigation]);
+  }, [navigation, state.isLoading]);
 
   // Custom hook to fetch data
   const fetchData = useCallback(async (url) => {

@@ -28,7 +28,7 @@ const LoadingScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/img/bashkortostan-logo.png')} // Replace with the path to your logo image
+          source={require('../assets/img/bashkortostan-logo.png')} 
           style={styles.logo}
         />
          <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator} />
@@ -36,14 +36,14 @@ const LoadingScreen = () => {
       {/* <Text style={styles.title}>ПУТЕВОДИТЕЛЬ ПО БАШКОРТОСТАНУ</Text> */}
      
       <View style={styles.titleContainer}>  
-        <View style={styles.supportContainer}>
+        <View style={styles.supportContainer}>                
+          <Text style={styles.supportText}>Разработано при поддержке</Text>
           <Image
-            source={require('../assets/img/convert.png')} // Replace with the path to your logo image
+            source={require('../assets/img/logoNPR.png')} 
             style={styles.convertIcon}
-          />      
-          <Text style={styles.supportText}>разработано при поддержке</Text>
+          />
         </View>
-        <Text style={styles.footerText}>Сообщить об ошибке/контакты</Text>
+        {/* <Text style={styles.footerText}>Сообщить об ошибке/контакты</Text> */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>лицензионное соглашение</Text>
           <Text style={styles.footerText}>политика конфиденциальности</Text>
@@ -76,10 +76,6 @@ const styles = StyleSheet.create({
     height: '100%', // Full height of the container
     resizeMode: 'contain' // This ensures the image is scaled proportionally
   },
-  convert: {
-    width: '15vw',
-    height: '15vw',
-  },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -99,15 +95,17 @@ const styles = StyleSheet.create({
 
   },
   supportContainer: {
-    flexDirection: 'row', // Align items horizontally
+    flexDirection: 'column', // Align items horizontally
     alignItems: 'center', // Center items vertically
     justifyContent: 'center', // Center items horizontally
-    marginBottom: 5, // Add some space below the container
+    // marginBottom: 5, // Add some space below the container
+    width: '100%', // Add some space
   },
   convertIcon: {
-    width: 53, // Adjust width as needed
-    height: 47, // Adjust height as needed
-    marginRight: 10, // Add space between the icon and text
+    width: '60%', // Занимает 100% ширины контейнера
+    height: '50%', //
+    resizeMode: 'contain', // Гарантирует, что изображение масштабируется пропорционально
+    marginHorizontal: 10,
   },
   supportText: {
     color: '#fff',

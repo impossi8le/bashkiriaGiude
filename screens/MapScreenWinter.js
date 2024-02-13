@@ -145,48 +145,62 @@ const BashkortostanMap = () => {
             longitudeDelta: Math.abs(northeastLon - southwestLon),
           }}
           onRegionChangeComplete={onRegionChangeComplete}
-          maxZoomLevel={8} // Set max zoom level
-          minZoomLevel={7}  // Set min zoom level
+          // maxZoomLevel={8} // Set max zoom level
+          // minZoomLevel={7}  // Set min zoom level
           customMapStyle={mapStyle}
         >
 
-          <Polygon
+          {/* <Polygon
             coordinates={worldCoordinates}
             holes={[bashkortostanCoordinates]}
             strokeColor="#FFF" // цвет линии
             fillColor="#6699ff40" // цвет заливки
             strokeWidth={0} // толщина линии
-          />
-          <Overlay
+          />*/}
+
+          {/* Картинка */}
+          {/* <Overlay
             bounds={overlayBounds}
             image={require('../assets/maps/winterMap.png')} // Используем локальное изображение
-          />
+          />  */}
+
+          {/* Массив точек */}
           {places.map(place => {
             // Проверяем, что location существует и имеет значение point
             if (!place.location || !place.location.point) {
+              console.error('Некорректные данные места:', place);
               return null;
             }
 
             const [latitude, longitude] = place.location.point.split(', ').map(Number);
-            const markerImageUrl = `https://bashkiriaguide.com/storage/${place.location.img}`; // URL изображения маркера
+            if (!isNaN(latitude) && !isNaN(longitude)) {
 
-            return (
-              <Marker
-                key={place.id}
-                coordinate={{ latitude, longitude }}
-                title={place.name}
-                // description={place.description}
-                onPress={() => onMarkerPress(place)}
-              >
-                <View>
-                  <Image
-                    source={{ uri: markerImageUrl }}
-                    style={markerImageStyle2}
-                    resizeMode="contain" // Убедитесь, что изображение масштабируется правильно
-                  />
-                </View>
-              </Marker>
-            );
+
+              const markerImageUrl = `https://bashkiriaguide.com/storage/${place.location.img}`; // URL изображения маркера
+
+              return (
+                <Marker
+                  key={place.id}
+                  coordinate={{ latitude, longitude }}
+                  title={place.name}
+                  // description={place.description}
+                  onPress={() => onMarkerPress(place)}
+                >
+                  <View>
+                    <Image
+                      source={{ uri: markerImageUrl }}
+                      style={markerImageStyle2}
+                      resizeMode="contain" // Убедитесь, что изображение масштабируется правильно
+                    />
+                  </View>
+                </Marker>
+              );
+
+            } else {
+              console.error('Некорректные точка места:', latitude);
+              return null;
+            }
+
           })}
 
         </MapView>

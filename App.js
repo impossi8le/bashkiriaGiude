@@ -1,5 +1,7 @@
 // app.js
 import React, { useEffect, useState } from 'react';
+import { Alert, BackHandler, Text } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as Font from 'expo-font';
@@ -16,12 +18,9 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
-  // Функция для рендеринга заголовка, которая принимает свойства от Navigator
-  const renderHeader = (props) => (
-    <Header {...props} />
-  );
-
+  // Отдельный useEffect для загрузки шрифтов
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
@@ -34,6 +33,34 @@ const App = () => {
     loadFonts();
   }, []);
 
+  // useEffect для подписки на изменения состояния сети
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+    });
+
+    return () => unsubscribe(); // Отписка от обновлений состояния сети
+  }, []);
+
+  // Проверка наличия интернет-соединения
+  useEffect(() => {
+    if (!isConnected) {
+      Alert.alert(
+        "Нет интернет-соединения",
+        "Для работы приложения необходимо интернет-соединение",
+        [{ text: "Закрыть приложение", onPress: () => BackHandler.exitApp() }],
+        { cancelable: false }
+      );
+    }
+  }, [isConnected]);
+
+  if (!fontsLoaded || !isConnected) {
+    return (
+      <Text>
+        Отсутствует интернет соединение!! Перезапустите приложение после появления интернет соединения.
+      </Text>
+    );
+  }
 
   return (
     <NavigationContainer>
