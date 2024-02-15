@@ -22,6 +22,8 @@ const HomeScreen = () => {
   });
   const flatListRef = useRef();
 
+  const ITEM_HEIGHT = 300; // Replace with the actual height of your item
+  const ITEM_WIDTH = '100%';
 
   // Header show
   useLayoutEffect(() => {
@@ -140,9 +142,20 @@ const HomeScreen = () => {
         <FlatList
           data={placesByCategory}
           renderItem={renderCategory}
-          keyExtractor={category => category.id.toString()}
+          keyExtractor={(category) => category.id.toString()}
+          getItemLayout={(data, index) => ({
+            length: ITEM_HEIGHT,
+            offset: ITEM_HEIGHT * index,
+            index,
+          })}
           ListHeaderComponent={Slider}
           ref={flatListRef}
+          onScrollToIndexFailed={(info) => {
+            const wait = new Promise((resolve) => setTimeout(resolve, 500));
+            wait.then(() => {
+              flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+            });
+          }}
         />
 
         <AttributeModal
