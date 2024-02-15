@@ -6,6 +6,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Slider from '../components/Slider';
 import LoadingScreen from './LoadingScreen';
 import { BackHandler, ToastAndroid } from 'react-native';
+import CachedImage from '../components/CachedImage';
 
 
 const HomeScreen = () => {
@@ -142,20 +143,9 @@ const HomeScreen = () => {
         <FlatList
           data={placesByCategory}
           renderItem={renderCategory}
-          keyExtractor={(category) => category.id.toString()}
-          getItemLayout={(data, index) => ({
-            length: ITEM_HEIGHT,
-            offset: ITEM_HEIGHT * index,
-            index,
-          })}
+          keyExtractor={category => category.id.toString()}
           ListHeaderComponent={Slider}
           ref={flatListRef}
-          onScrollToIndexFailed={(info) => {
-            const wait = new Promise((resolve) => setTimeout(resolve, 500));
-            wait.then(() => {
-              flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
-            });
-          }}
         />
 
         <AttributeModal
@@ -182,9 +172,20 @@ const CategoryView = ({ category, onDetailsPress, onAttributePress,  }) => {
               style={styles.categoryImage}
             />
           )}
-          <Text style={{ flexShrink: 1, fontSize: 18, fontWeight: 'bold', fontFamily: 'Inter' }}>
-            {category.name}
-          </Text>
+          <View style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <Text
+              style={{
+                flexShrink: 1,
+                fontSize: 18,
+                fontWeight: 'bold',
+                fontFamily: 'Inter',
+                flexWrap: 'wrap', // This property is not needed as wrapping is default
+              }}
+              numberOfLines={0} // Setting to 0 should not be necessary unless you have a specific reason
+            >
+              {category.name}
+            </Text>            
+          </View>
         </View>
       )}
       <View style={styles.cardContainer}>
@@ -198,29 +199,58 @@ const CategoryView = ({ category, onDetailsPress, onAttributePress,  }) => {
 
 // Header for each category
 const CategoryHeader = ({ category }) => {
+
+  const categoryCacheKey = `category-${category.id}`;
+
   return (
     <View style={styles.categoryHeader}>
       {category.parentCategory.name && (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={{ uri: `https://bashkiriaguide.com/storage/${category.parentCategory.img}` }} style={styles.categoryImage} />
-          <Text style={{ flexShrink: 1, fontSize: 20, fontWeight: 'bold', fontFamily: 'Inter', flexWrap: 'wrap' }}>
-            {category.parentCategory.name}
-          </Text>          
+          <CachedImage
+            source={{ uri: `https://bashkiriaguide.com/storage/${category.parentCategory.img}` }}
+            cacheKey={categoryCacheKey}
+            style={styles.categoryImage}
+          />
+          <View style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <Text
+              style={{
+                flexShrink: 1,
+                fontSize: 20,
+                fontWeight: 'bold',
+                fontFamily: 'Inter',
+                flexWrap: 'wrap', // This property is not needed as wrapping is default
+              }}
+              numberOfLines={0} // Setting to 0 should not be necessary unless you have a specific reason
+            >
+              {category.name}
+            </Text>            
+          </View>
         </View>
       )}
     </View>
   );
 };
 
+
+
 // Component for each place card
 const PlaceCard = ({ place, onDetailsPress, onAttributePress }) => {
+
+  const cacheKey = `place-${place.id}`;
+
+
   return (
     <TouchableOpacity
       style={place.orientationImg === '1' ? styles.verticalCard : styles.horizontalCard}
       onPress={() => onDetailsPress(place.id)}
       activeOpacity={1}
     >
-      <Image source={{ uri: `https://bashkiriaguide.com/storage/${place.img}` }} style={styles.cardImage} />
+      {/* <Image source={{ uri: `https://bashkiriaguide.com/storage/${place.img}` }} style={styles.cardImage} /> */}
+      <CachedImage
+        source={{ uri: `https://bashkiriaguide.com/storage/${place.img}` }}
+        cacheKey={cacheKey}
+        style={styles.cardImage}
+      />
       <Text style={[styles.placeName, styles.placeName1]}>{place.name}</Text>
       <Text style={[styles.placeName, styles.addresName1]}>{place.address}</Text>
       <AttributesContainer attributes={place.attributes} onPress={onAttributePress} />
@@ -235,11 +265,18 @@ const PlaceCard = ({ place, onDetailsPress, onAttributePress }) => {
 const AttributesContainer = ({ attributes, onPress }) => {
   return (
     <View style={styles.attributesContainer}>
-      {attributes && attributes.map(attribute => (
-        <TouchableOpacity key={attribute.id} onPress={() => onPress(attribute.name)} style={styles.attributeTouch}>
-          <Image source={{ uri: `https://bashkiriaguide.com/storage/${attribute.img}` }} style={styles.attributeImage} />
-        </TouchableOpacity>
-      ))}
+      {attributes.map(attribute => {
+        const attributeCacheKey = `attribute-${attribute.id}`;
+        return (
+          <TouchableOpacity key={attribute.id} onPress={() => onPress(attribute.name)} style={styles.attributeTouch}>
+            <CachedImage
+              source={{ uri: `https://bashkiriaguide.com/storage/${attribute.img}` }}
+              cacheKey={attributeCacheKey}
+              style={styles.attributeImage}
+            />
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -297,9 +334,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     height: 50,
+    marginVertical: 5, // Adjust as needed
   },
   addresName1: {
-    marginVertical: 3,
+    marginVertical: 5,
     height: 40,
   },
   detailsButton: {
@@ -319,6 +357,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1, // Aspect ratio for vertical images
     paddingVertical: 30, //
     marginVertical: 70, //
+    height: 100,
   },
   horizontalCard: {
     width: '100%', // Занимаем всю ширину
@@ -326,13 +365,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center', 
     marginVertical: 70, //
     paddingVertical: 30, //
+    height: 100,
+
   },
   cardContainer: {
     flexDirection: 'row', 
     flexWrap: 'wrap', 
     justifyContent: 'space-between',  
     margin: 5,
-    marginBottom: 300,
+    marginBottom: 150,
     marginTop: -40,
     width: '98%',
   },

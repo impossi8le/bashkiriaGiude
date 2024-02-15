@@ -5,6 +5,7 @@ import { FlatList } from 'react-native';
 // import Header from '../components/Header';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import CachedImage from '../components/CachedImage';
 
 const SearchScreen = () => {
   const navigation = useNavigation();
@@ -41,33 +42,40 @@ const SearchScreen = () => {
     setHeaderHeight(height);
   };
 
-  const renderPlaceItem = ({ item }) => (
-    <View style={styles.placeItem}>
-      <Image 
-        source={{ uri: item.img ? `https://bashkiriaguide.com/storage/${item.img}` : 'placeholder_image_url' }} 
-        style={styles.placeImage} 
-      />
-      <View style={styles.placeInfo}>
-        <Text style={styles.placeName}>{item.name}</Text>
-        <Text style={styles.placeAddress}>{item.address}</Text>
-        <View style={styles.attributesContainer}>
-          {item.attributes.map((attribute) => (
-            <Image
-              key={attribute.id}
-              source={{ uri: `https://bashkiriaguide.com/storage/${attribute.img}` }}
-              style={styles.attributeImage}
-            />
-          ))}
+  const renderPlaceItem = ({ item }) => {
+    const imageCacheKey = `place-${item.id}-image`; // A unique key for caching the image
+    const attributeCacheKeys = item.attributes.map(attr => `attribute-${attr.id}-image`); // Unique keys for each attribute image
+
+    return (
+      <View style={styles.placeItem}>
+        <CachedImage 
+          source={{ uri: item.img ? `https://bashkiriaguide.com/storage/${item.img}` : 'placeholder_image_url' }} 
+          cacheKey={imageCacheKey}
+          style={styles.placeImage} 
+        />
+        <View style={styles.placeInfo}>
+          <Text style={styles.placeName}>{item.name}</Text>
+          <Text style={styles.placeAddress}>{item.address}</Text>
+          <View style={styles.attributesContainer}>
+            {item.attributes.map((attribute, index) => (
+              <CachedImage
+                key={attribute.id}
+                source={{ uri: `https://bashkiriaguide.com/storage/${attribute.img}` }}
+                cacheKey={attributeCacheKeys[index]}
+                style={styles.attributeImage}
+              />
+            ))}
+          </View>
+          <TouchableOpacity
+            style={styles.detailsButton}
+            onPress={() => navigation.navigate('ObjectCard', { placeId: item.id })}
+          >
+            <Text style={styles.detailsButtonText}>Подробнее</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.detailsButton}
-          onPress={() => navigation.navigate('ObjectCard', { placeId: item.id })}
-        >
-          <Text style={styles.detailsButtonText}>Подробнее</Text>
-        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
   
 
   // Фильтрация мест в зависимости от запроса

@@ -5,6 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import bashkortostanBorderCoordinates from '../components/bashkortostanBorderCoordinates';
 
+import CachedImage from '../components/CachedImage';
 
 
 const BashkortostanMap = () => {
@@ -166,6 +167,8 @@ const BashkortostanMap = () => {
 
           {/* Массив точек */}
           {places.map(place => {
+            const markerCacheKey = `place-marker-${place.id}`;
+            const placeImageCacheKey = `place-image-${place.id}`; 
             // Проверяем, что location существует и имеет значение point
             if (!place.location || !place.location.point) {
               console.error('Некорректные данные места:', place);
@@ -187,10 +190,11 @@ const BashkortostanMap = () => {
                   onPress={() => onMarkerPress(place)}
                 >
                   <View>
-                    <Image
+                    <CachedImage
                       source={{ uri: markerImageUrl }}
+                      cacheKey={markerCacheKey}
                       style={markerImageStyle2}
-                      resizeMode="contain" // Убедитесь, что изображение масштабируется правильно
+                      resizeMode="contain"
                     />
                   </View>
                 </Marker>
@@ -216,8 +220,9 @@ const BashkortostanMap = () => {
               <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
                 <Text>X</Text>
               </TouchableOpacity>
-              <Image
+              <CachedImage
                 source={{ uri: `https://bashkiriaguide.com/storage/${selectedPlace.img}` }}
+                cacheKey={placeImageCacheKey}
                 style={styles.imageStyle}
               />
               <View style={styles.infoContainer}>
