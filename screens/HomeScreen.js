@@ -23,8 +23,7 @@ const HomeScreen = () => {
   });
   const flatListRef = useRef();
 
-  const ITEM_HEIGHT = 300; // Replace with the actual height of your item
-  const ITEM_WIDTH = '100%';
+
 
   // Header show
   useLayoutEffect(() => {
@@ -46,6 +45,8 @@ const HomeScreen = () => {
         fetchData('https://bashkiriaguide.com/api/categories'),
         fetchData('https://bashkiriaguide.com/api/places')
       ]).then(([categoriesResponse, placesResponse]) => {
+        console.log("Места:", placesResponse.data);
+
         const categoriesData = processCategories(categoriesResponse.data);
         const placesData = placesResponse.data;
         setState(prev => {
