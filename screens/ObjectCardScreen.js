@@ -81,7 +81,16 @@ const ObjectCardScreen = ({ route }) => {
     Linking.openURL(`https://maps.google.com/?q=${mapQuery}`);
   };
 
-
+  const ReviewItem = ({ review }) => {
+    const readableDate = new Date(review.created_at).toLocaleDateString();
+    return (
+      <View style={styles.reviewItem}>
+        <Text style={styles.reviewText}>{review.text}</Text>
+        <Text style={styles.reviewDate}>{readableDate}</Text>
+      </View>
+    );
+  };
+  
 
   return (    
     <SafeAreaProvider>
@@ -113,10 +122,22 @@ const ObjectCardScreen = ({ route }) => {
                 <Text style={styles.mapButtonText}>Показать на карте</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Display additional attributes and organisations */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignContent: 'center', marginTop: 30}}>
+              <Text style={styles.title}>Отзывы</Text>
+              <TouchableOpacity onPress={openBookingModal} style={styles.reviewButton}>
+                <Text style={styles.bookButtonText}>Оставить отзыв</Text>
+              </TouchableOpacity>   
+            </View>
+            {placeDetails.reviews && placeDetails.reviews.length > 0 ? (
+              <FlatList
+                data={placeDetails.reviews}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <ReviewItem review={item} />}
+              />
+            ) : (
+              <Text style={styles.noReviewsText}>Отзывы отсутствуют</Text>
+            )}
           </View>
-          {/* Render other place details */}
         </ScrollView>
         <Modal
           animationType="slide"
@@ -189,6 +210,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     zIndex: 10, // Make sure the button is above the image
+  },
+  reviewButton: {
+    backgroundColor: '#373571', // Use your own color
+    padding: 10,
+    borderRadius: 5,
   },
   bookButtonText: {
     color: '#fff',
@@ -285,6 +311,30 @@ const styles = StyleSheet.create({
   },
   closeModalButtonText: {
     color: '#FFFFFF',
+  },
+  reviewItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  
+  reviewText: {
+    fontSize: 16,
+    color: 'black',
+    // Дополнительные стили для текста отзыва
+  },
+  
+  noReviewsText: {
+    fontSize: 16,
+    color: 'grey',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  reviewDate: {
+    fontSize: 14,
+    color: 'grey',
+    marginTop: 5,
+    // Дополнительные стили для текста даты
   },
   // Additional styles if needed
 });

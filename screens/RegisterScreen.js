@@ -34,7 +34,7 @@ const RegisterScreen = ({ navigation }) => {
       if (response.status === 201) {
         // Успешная регистрация
         // Можно перенаправить пользователя на экран входа или сразу в приложение
-        navigation.navigate('LoginScreen');
+        navigation.navigate('Login');
       } else {
         // Обработка ошибок с сервера
         const errorMessages = data.errors ? Object.values(data.errors).join(' ') : data.message;
@@ -80,7 +80,7 @@ const RegisterScreen = ({ navigation }) => {
       <TouchableOpacity onPress={handleRegister} style={styles.button}>
         <Text style={styles.buttonText}>Зарегистрироваться</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.button}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.button}>
         <Text style={styles.buttonText}>Уже есть аккаунт? Войти</Text>
       </TouchableOpacity>
     </View>

@@ -166,7 +166,7 @@ const BashkortostanMap = () => {
             const placeImageCacheKey = `place-image-${place.id}`; 
             // Проверяем, что location существует и имеет значение point
             if (!place.location || !place.location.point) {
-              console.error('Некорректные данные места:', place);
+              // console.error('Некорректные данные места:', place);
               return null;
             }
 

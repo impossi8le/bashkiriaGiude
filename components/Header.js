@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import { Animated, Modal, View, StyleSheet, TouchableOpacity, Image, Text,  Dimensions, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Header = () => {
@@ -10,6 +11,29 @@ const Header = () => {
   const [menuData, setMenuData] = useState([]); 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   
+  const [userName, setUserName] = useState(null);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const token = await AsyncStorage.getItem('userToken');
+      const name = await AsyncStorage.getItem('userName'); // Предполагается, что имя пользователя сохраняется под ключом 'userName'
+      console.log(name);
+      if (token && name) {
+        setUserName(name);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('userId');
+
+    // await AsyncStorage.removeItem('userName'); // Удаление имени пользователя, если оно сохранялось
+    // navigation.navigate('Login'); // Перенаправление на экран входа
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -36,6 +60,14 @@ const Header = () => {
 
   const goToMapSummerScreen = () => {
     navigation.navigate('MapSummer');
+  };
+
+  const goToLoginScreen = () => {
+    navigation.navigate('Login');
+  };
+
+  const goToRegisterScreen = () => {
+    navigation.navigate('Register');
   };
 
   const renderDrawerMenu = () => {
@@ -94,6 +126,27 @@ const Header = () => {
           </TouchableOpacity>
 
           <ScrollView showsVerticalScrollIndicator={false} style={styles.ScrollView}>
+          {userName ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center',  justifyContent: 'space-between' }}>
+              <Text  style={styles.menuItem}>Добро пожаловать, {userName}</Text>
+              <TouchableOpacity onPress={handleLogout}>
+                <Text style={styles.menuItem}>Выйти</Text>
+              </TouchableOpacity>
+            </View>
+            ) : (
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <TouchableOpacity onPress={goToLoginScreen}>
+                <Text style={styles.menuItem}>
+                  Авторизация
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={goToRegisterScreen}>
+                <Text style={styles.menuItem}>
+                  /Регистрация
+                </Text>
+              </TouchableOpacity>
+            </View>
+            )}       
             {renderDrawerMenu()}
             <Text style={styles.menuItem}>
               Карты

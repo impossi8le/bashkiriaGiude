@@ -45,7 +45,7 @@ const HomeScreen = () => {
         fetchData('https://bashkiriaguide.com/api/categories'),
         fetchData('https://bashkiriaguide.com/api/places')
       ]).then(([categoriesResponse, placesResponse]) => {
-        console.log("Места:", placesResponse.data);
+        console.log("Места:", placesResponse.data[placesResponse.data.length-1]['name']);
 
         const categoriesData = processCategories(categoriesResponse.data);
         const placesData = placesResponse.data;

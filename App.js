@@ -11,6 +11,8 @@ import ObjectCardScreen from './screens/ObjectCardScreen';
 import MapScreenWinter from './screens/MapScreenWinter';
 import MapScreenSummer from './screens/MapScreenSummer';
 import SearchScreen from './screens/SearchScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 import Header from './components/Header';
 
@@ -78,6 +80,8 @@ const App = () => {
         <Stack.Screen name="ObjectCard" component={ObjectCardScreen} />
         <Stack.Screen name="MapWinter" component={MapScreenWinter} />
         <Stack.Screen name="MapSummer" component={MapScreenSummer} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>
